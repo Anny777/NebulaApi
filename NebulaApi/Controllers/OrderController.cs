@@ -1,49 +1,24 @@
-﻿using System;
+﻿using NebulaApi.Models;
+using NebulaApi.ViewModels;
+using ProjectOrderFood.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using NebulaApi.Models;
 using System.Web.Http;
-using NebulaApi.ViewModels;
-using ProjectOrderFood.Models;
 
 namespace NebulaApi.Controllers
 {
-    //Get (api/value)
-    public class WebApiController : ApiController
+    public class OrderController : ApiController
     {
-        //public void SetToken(string token)
-        //{
-        //    Formula360Connection.SetToken(token);
-        //}
-
-        /// <summary>
-        /// Получение списка блюд
-        /// </summary>
-        /// <returns></returns>
-
-        public IHttpActionResult GetListDishes()
-        {
-
-            var db = new ApplicationDbContext();
-            var response = db.Dishes.Select(c => new DishViewModel()
-            {
-                Id = c.Id,
-                Name = c.name,
-                Consist = c.Consist,
-                Price = c.sellingPrice,
-                Unit = c.Unit
-            }).OrderBy(b => b.Name).ToList();
-            return Json(response);
-        }
-
         /// <summary>
         /// Создание нового заказа; Дополнение существующего заказа; Запрос на удаление блюда;
         /// </summary>
         /// <param name="order">заказ</param>
         /// <returns></returns>
-        public IHttpActionResult Order(OrderViewModel order)
+        [HttpPost]
+        public IHttpActionResult New(OrderViewModel order)
         {
             if (order == null || order.Dishes == null)
             {
@@ -99,12 +74,12 @@ namespace NebulaApi.Controllers
             db.SaveChanges();
             return Ok();
         }
-
         /// <summary>
         /// Получение открытых заказов (официант, кухня и бар будут брать блюда отсюда)
         /// </summary>
         /// <returns></returns>
-        public IHttpActionResult GetOrders()
+        [HttpGet]
+        public IHttpActionResult List()
         {
             var db = new ApplicationDbContext();
             var orders = db.Customs.Where(c => c.IsOpened).Select(c => new OrderViewModel()
@@ -134,7 +109,8 @@ namespace NebulaApi.Controllers
         /// <param name="id">идентификатор блюда</param>
         /// <param name="dishState">статус блюда</param>
         /// <returns></returns>
-        public IHttpActionResult ChangeState(int id, DishState dishState)
+        [HttpPost]
+        public IHttpActionResult SetState(int id, DishState dishState)
         {
             var db = new ApplicationDbContext();
             var dish = db.CookingDishes.Find(id);
@@ -152,7 +128,8 @@ namespace NebulaApi.Controllers
         /// </summary>
         /// <param name="tableNumber">номер стола</param>
         /// <returns></returns>
-        public IHttpActionResult CloseOrder(int tableNumber)
+        [HttpPost]
+        public IHttpActionResult Close(int tableNumber)
         {
             var db = new ApplicationDbContext();
             var customs = db.Customs.FirstOrDefault(c => c.TableNumber == tableNumber && c.IsOpened);

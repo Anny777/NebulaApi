@@ -23,7 +23,7 @@ namespace NebulaApi.Models
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
         public ApplicationDbContext()
-           : base("ProjectOrderFood", throwIfV1Schema: false)
+           : base("Nebula", throwIfV1Schema: false)
         {
         }
 
