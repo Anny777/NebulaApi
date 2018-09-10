@@ -7,9 +7,11 @@ using NebulaApi.Models;
 using System.Web.Http;
 using NebulaApi.ViewModels;
 using ProjectOrderFood.Models;
+using System.Web.Http.Cors;
 
 namespace NebulaApi.Controllers
 {
+    [EnableCors(origins: "*", headers: "*", methods: "*")]
     //Get (api/value)
     public class DishController : ApiController
     {
