@@ -241,6 +241,15 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201809171923189_InitialCreate.cs" />
+    <Compile Include="Migrations\201809171923189_InitialCreate.Designer.cs">
+      <DependentUpon>201809171923189_InitialCreate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201809171924511__.cs" />
+    <Compile Include="Migrations\201809171924511__.Designer.cs">
+      <DependentUpon>201809171924511__.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountBindingModels.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Category.cs" />
@@ -248,10 +257,11 @@
     <Compile Include="Models\Custom.cs" />
     <Compile Include="Models\Dish.cs" />
     <Compile Include="Models\DishBase.cs" />
-    <Compile Include="Models\DishState.cs" />
+    <Compile Include="Enums\DishState.cs" />
     <Compile Include="Models\IdentityModels.cs" />
+    <Compile Include="Models\ModelBase.cs" />
     <Compile Include="Models\SubCategory.cs" />
-    <Compile Include="Models\WorkshopType.cs" />
+    <Compile Include="Enums\WorkshopType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Providers\ApplicationOAuthProvider.cs" />
     <Compile Include="Results\ChallengeResult.cs" />
@@ -267,6 +277,8 @@
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
+    <Content Include="Migrations\201809171923189.sql" />
+    <Content Include="Migrations\201809171924511.sql" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Areas\HelpPage\Views\Web.config" />
@@ -333,6 +345,14 @@
   <ItemGroup>
     <None Include="packages.config" />
     <Content Include="Scripts\jquery-1.10.2.min.map" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201809171923189_InitialCreate.resx">
+      <DependentUpon>201809171923189_InitialCreate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201809171924511__.resx">
+      <DependentUpon>201809171924511__.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

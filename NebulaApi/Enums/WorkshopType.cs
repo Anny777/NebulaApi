@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace ProjectOrderFood.Models
+namespace ProjectOrderFood.Enums
 {
     public enum WorkshopType
     {

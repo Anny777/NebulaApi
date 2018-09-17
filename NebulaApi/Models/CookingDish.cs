@@ -1,13 +1,13 @@
-﻿using ProjectOrderFood.Models;
+﻿using ProjectOrderFood.Enums;
+using ProjectOrderFood.Models;
 
 namespace NebulaApi.Models
 {
-    public class CookingDish 
+    public class CookingDish : ModelBase
     {
-        public int Id { get; set; }
         public virtual Dish Dish { get; set; }
         public virtual DishState DishState { get; set; }
         public virtual Custom Custom { get; set; }
-        public virtual string Comment { get; set; }
+        public string Comment { get; set; }
     }
 }

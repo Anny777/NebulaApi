@@ -2,11 +2,9 @@
 
 namespace NebulaApi.Models
 {
-    public class Category
+    public class Category : ModelBase
     {
-        public virtual int Id { get; set; }
-        [Display (Name = "Категория")]
-        public virtual string Name { get; set; }
-        public virtual string UrlImage { get; set; }
+        public string Name { get; set; }
+        public string UrlImage { get; set; }
     }
 }

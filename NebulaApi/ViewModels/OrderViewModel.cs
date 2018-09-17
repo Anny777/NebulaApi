@@ -20,6 +20,10 @@ namespace NebulaApi.ViewModels
         /// Номер стола
         /// </summary>
         public int Table;
+        /// <summary>
+        /// Дата создания
+        /// </summary>
+        public DateTime CreatedDate { get; set; }
     }
 
     public class Dish
