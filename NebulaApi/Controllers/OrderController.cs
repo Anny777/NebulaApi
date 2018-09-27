@@ -42,22 +42,34 @@ namespace NebulaApi.Controllers
                     {
                         Comment = a.Comment,
                         Dish = dishes.Single(c => c.Id == a.Id),
-                        DishState = DishState.InWork
+                        DishState = DishState.InWork,
+                        CreatedDate = a.CreatedDate
                     }).ToArray()
                 };
                 db.Customs.Add(o);
             }
             else
             {
-                var od = order.Dishes.Where(d => d.CookingDishId <= 0).Select(d => d.Id).Distinct().ToArray();
-                // Дополнение существующего заказа
-                var dishes = db.Dishes.Where(c => od.Contains(c.Id)).ToList();
+                var newDishes = order.Dishes.Where(d => d.CookingDishId <= 0).ToArray();
+                var od = newDishes.Select(d => d.Id).Distinct().ToArray();
 
-                var custom = db.Customs.Find(order.Id);
-
-                if (custom == null)
+                if (od.Count() > 0)
                 {
-                    return BadRequest("Не найден заказ");
+                    var dishes = db.Dishes.Where(c => od.Contains(c.Id)).ToArray();
+
+                    var custom = db.Customs.Find(order.Id);
+
+                    if (custom == null)
+                    {
+                        return BadRequest("Не найден заказ");
+                    }
+                    newDishes.Select(a => new CookingDish()
+                    {
+                        Comment = a.Comment,
+                        Dish = dishes.Single(c => c.Id == a.Id),
+                        DishState = DishState.InWork,
+                        CreatedDate = a.CreatedDate
+                    }).ToList().ForEach(custom.CookingDishes.Add);
                 }
                 // Запрос на удаление блюда из заказа (с помощью Except возвращает блюда, которым нужно сменить статус)
                 //var crd = custom.CookingDishes.Select(c => c.Id)
@@ -65,13 +77,6 @@ namespace NebulaApi.Controllers
 
                 //db.CookingDishes.Where(c => crd.Contains(c.Id)).ToList()
                 //    .ForEach(c => { c.DishState = DishState.CancellationRequested; });
-
-                order.Dishes.Select(a => new CookingDish()
-                {
-                    Comment = a.Comment,
-                    Dish = dishes.Single(c => c.Id == a.Id),
-                    DishState = DishState.InWork
-                }).ToList().ForEach(o => custom.CookingDishes.Add(o));
             }
 
             db.SaveChanges();
@@ -99,8 +104,10 @@ namespace NebulaApi.Controllers
                     Comment = b.Comment,
                     State = b.DishState,
                     Price = b.Dish.sellingPrice,
-                    WorkshopType = b.Dish.WorkshopType
-                })
+                    WorkshopType = b.Dish.WorkshopType,
+                    CreatedDate = b.CreatedDate
+                }),
+                CreatedDate = c.CreatedDate
             });
 
             return Json(orders.ToArray());

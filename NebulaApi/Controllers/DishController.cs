@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
+﻿using System.Linq;
 using NebulaApi.Models;
 using System.Web.Http;
 using NebulaApi.ViewModels;
-using ProjectOrderFood.Models;
 using System.Web.Http.Cors;
 
 namespace NebulaApi.Controllers
@@ -22,10 +17,10 @@ namespace NebulaApi.Controllers
 
         /// <summary>
         /// Получение списка блюд
+        public IHttpActionResult List()
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public IHttpActionResult List()
         {
             var db = new ApplicationDbContext();
             var response = db.Dishes.Select(c => new DishViewModel()

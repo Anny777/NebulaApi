@@ -1,4 +1,5 @@
-﻿using ProjectOrderFood.Enums;
+﻿using NebulaApi.Models;
+using ProjectOrderFood.Enums;
 using ProjectOrderFood.Models;
 using System;
 using System.Collections.Generic;
@@ -7,12 +8,8 @@ using System.Web;
 
 namespace NebulaApi.ViewModels
 {
-    public class DishViewModel
+    public class DishViewModel : ModelBase
     {
-        /// <summary>
-        /// Идентификатор блюда
-        /// </summary>
-        public int Id;
         /// <summary>
         /// Идентификатор заказанного блюда
         /// </summary>
