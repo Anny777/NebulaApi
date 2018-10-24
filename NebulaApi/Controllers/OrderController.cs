@@ -21,6 +21,7 @@ namespace NebulaApi.Controllers
         /// <param name="order">заказ</param>
         /// <returns></returns>
         [HttpPost]
+        [Authorize (Roles = "Waiter, Admin")]
         public IHttpActionResult New(OrderViewModel order)
         {
             if (order == null || order.Dishes == null)
@@ -87,6 +88,7 @@ namespace NebulaApi.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
+        [Authorize]
         public IHttpActionResult List()
         {
             var db = new ApplicationDbContext();
@@ -120,6 +122,7 @@ namespace NebulaApi.Controllers
         /// <param name="dishState">статус блюда</param>
         /// <returns></returns>
         [HttpPost]
+        [Authorize (Roles = "Admin, Bartender, Cook")]
         public IHttpActionResult SetState(int id, DishState dishState)
         {
             var db = new ApplicationDbContext();
@@ -139,6 +142,7 @@ namespace NebulaApi.Controllers
         /// <param name="tableNumber">номер стола</param>
         /// <returns></returns>
         [HttpPost]
+        [Authorize(Roles = "Bartender, Admin")]
         public IHttpActionResult Close(int tableNumber)
         {
             var db = new ApplicationDbContext();

@@ -17,10 +17,11 @@ namespace NebulaApi.Controllers
 
         /// <summary>
         /// Получение списка блюд
-        public IHttpActionResult List()
-        /// </summary>
+        /// /// </summary>
         /// <returns></returns>
         [HttpGet]
+        [Authorize]
+        public IHttpActionResult List()
         {
             var db = new ApplicationDbContext();
             var response = db.Dishes.Select(c => new DishViewModel()
