@@ -1,12 +1,7 @@
 ﻿using NebulaApi.Models;
 using NebulaApi.ViewModels;
 using ProjectOrderFood.Enums;
-using ProjectOrderFood.Models;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Cors;
 
@@ -53,12 +48,12 @@ namespace NebulaApi.Controllers
             {
                 var newDishes = order.Dishes.Where(d => d.CookingDishId <= 0).ToArray();
                 var od = newDishes.Select(d => d.Id).Distinct().ToArray();
+                var custom = db.Customs.Find(order.Id);
 
                 if (od.Count() > 0)
                 {
                     var dishes = db.Dishes.Where(c => od.Contains(c.Id)).ToArray();
 
-                    var custom = db.Customs.Find(order.Id);
 
                     if (custom == null)
                     {
@@ -72,12 +67,13 @@ namespace NebulaApi.Controllers
                         CreatedDate = a.CreatedDate
                     }).ToList().ForEach(custom.CookingDishes.Add);
                 }
-                // Запрос на удаление блюда из заказа (с помощью Except возвращает блюда, которым нужно сменить статус)
-                //var crd = custom.CookingDishes.Select(c => c.Id)
-                //    .Except(order.Dishes.Where(c => c.CookingDishId > 0).Select(c => c.CookingDishId));
 
-                //db.CookingDishes.Where(c => crd.Contains(c.Id)).ToList()
-                //    .ForEach(c => { c.DishState = DishState.CancellationRequested; });
+                // Запрос на удаление блюда из заказа (с помощью Except возвращает блюда, которым нужно сменить статус)
+                var crd = custom.CookingDishes.Select(c => c.Id)
+                    .Except(order.Dishes.Where(c => c.CookingDishId > 0).Select(c => c.CookingDishId));
+
+                db.CookingDishes.Where(c => crd.Contains(c.Id)).ToList()
+                    .ForEach(c => { c.DishState = DishState.CancellationRequested; });
             }
 
             db.SaveChanges();
