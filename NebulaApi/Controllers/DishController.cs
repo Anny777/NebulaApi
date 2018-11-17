@@ -3,6 +3,7 @@ using NebulaApi.Models;
 using System.Web.Http;
 using NebulaApi.ViewModels;
 using System.Web.Http.Cors;
+using ProjectOrderFood.Enums;
 
 namespace NebulaApi.Controllers
 {
@@ -33,6 +34,27 @@ namespace NebulaApi.Controllers
                 Unit = c.Unit
             }).OrderBy(b => b.Name).ToList();
             return Json(response);
+        }
+
+        /// <summary>
+        /// Смена состояния блюда на готовое
+        /// </summary>
+        /// <param name="id">идентификатор блюда</param>
+        /// <param name="dishState">статус блюда</param>
+        /// <returns></returns>
+        [HttpPost]
+        [Authorize(Roles = "Admin, Bartender, Cook, Waiter")]
+        public IHttpActionResult SetState(int id, DishState dishState)
+        {
+            var db = new ApplicationDbContext();
+            var dish = db.CookingDishes.Find(id);
+            if (dish == null)
+            {
+                return BadRequest("Блюдо не найдено!");
+            }
+            dish.DishState = dishState;
+            db.SaveChanges();
+            return Ok();
         }
     }
 }

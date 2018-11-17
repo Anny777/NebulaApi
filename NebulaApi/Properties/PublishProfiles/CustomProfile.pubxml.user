@@ -17,64 +17,64 @@
       <publishTime>06/09/2018 22:15:42</publishTime>
     </File>
     <File Include="Areas/HelpPage/Views/Help/Api.cshtml">
-      <publishTime>06/09/2018 22:15:41</publishTime>
+      <publishTime>09/06/2018 22:15:41</publishTime>
     </File>
     <File Include="Areas/HelpPage/Views/Help/DisplayTemplates/ApiGroup.cshtml">
-      <publishTime>06/09/2018 22:15:41</publishTime>
+      <publishTime>09/06/2018 22:15:41</publishTime>
     </File>
     <File Include="Areas/HelpPage/Views/Help/DisplayTemplates/CollectionModelDescription.cshtml">
-      <publishTime>06/09/2018 22:15:41</publishTime>
+      <publishTime>09/06/2018 22:15:41</publishTime>
     </File>
     <File Include="Areas/HelpPage/Views/Help/DisplayTemplates/ComplexTypeModelDescription.cshtml">
-      <publishTime>06/09/2018 22:15:41</publishTime>
+      <publishTime>09/06/2018 22:15:41</publishTime>
     </File>
     <File Include="Areas/HelpPage/Views/Help/DisplayTemplates/DictionaryModelDescription.cshtml">
-      <publishTime>06/09/2018 22:15:41</publishTime>
+      <publishTime>09/06/2018 22:15:41</publishTime>
     </File>
     <File Include="Areas/HelpPage/Views/Help/DisplayTemplates/EnumTypeModelDescription.cshtml">
-      <publishTime>06/09/2018 22:15:41</publishTime>
+      <publishTime>09/06/2018 22:15:41</publishTime>
     </File>
     <File Include="Areas/HelpPage/Views/Help/DisplayTemplates/HelpPageApiModel.cshtml">
-      <publishTime>06/09/2018 22:15:41</publishTime>
+      <publishTime>09/06/2018 22:15:41</publishTime>
     </File>
     <File Include="Areas/HelpPage/Views/Help/DisplayTemplates/ImageSample.cshtml">
-      <publishTime>06/09/2018 22:15:41</publishTime>
+      <publishTime>09/06/2018 22:15:41</publishTime>
     </File>
     <File Include="Areas/HelpPage/Views/Help/DisplayTemplates/InvalidSample.cshtml">
-      <publishTime>06/09/2018 22:15:41</publishTime>
+      <publishTime>09/06/2018 22:15:41</publishTime>
     </File>
     <File Include="Areas/HelpPage/Views/Help/DisplayTemplates/KeyValuePairModelDescription.cshtml">
-      <publishTime>06/09/2018 22:15:40</publishTime>
+      <publishTime>09/06/2018 22:15:40</publishTime>
     </File>
     <File Include="Areas/HelpPage/Views/Help/DisplayTemplates/ModelDescriptionLink.cshtml">
-      <publishTime>06/09/2018 22:15:40</publishTime>
+      <publishTime>09/06/2018 22:15:40</publishTime>
     </File>
     <File Include="Areas/HelpPage/Views/Help/DisplayTemplates/Parameters.cshtml">
-      <publishTime>06/09/2018 22:15:40</publishTime>
+      <publishTime>09/06/2018 22:15:40</publishTime>
     </File>
     <File Include="Areas/HelpPage/Views/Help/DisplayTemplates/Samples.cshtml">
-      <publishTime>06/09/2018 22:15:40</publishTime>
+      <publishTime>09/06/2018 22:15:40</publishTime>
     </File>
     <File Include="Areas/HelpPage/Views/Help/DisplayTemplates/SimpleTypeModelDescription.cshtml">
-      <publishTime>06/09/2018 22:15:40</publishTime>
+      <publishTime>09/06/2018 22:15:40</publishTime>
     </File>
     <File Include="Areas/HelpPage/Views/Help/DisplayTemplates/TextSample.cshtml">
-      <publishTime>06/09/2018 22:15:40</publishTime>
+      <publishTime>09/06/2018 22:15:40</publishTime>
     </File>
     <File Include="Areas/HelpPage/Views/Help/Index.cshtml">
-      <publishTime>06/09/2018 22:15:40</publishTime>
+      <publishTime>09/06/2018 22:15:40</publishTime>
     </File>
     <File Include="Areas/HelpPage/Views/Help/ResourceModel.cshtml">
-      <publishTime>06/09/2018 22:15:40</publishTime>
+      <publishTime>09/06/2018 22:15:40</publishTime>
     </File>
     <File Include="Areas/HelpPage/Views/Shared/_Layout.cshtml">
-      <publishTime>06/09/2018 22:15:40</publishTime>
+      <publishTime>09/06/2018 22:15:40</publishTime>
     </File>
     <File Include="Areas/HelpPage/Views/Web.config">
-      <publishTime>06/09/2018 22:15:40</publishTime>
+      <publishTime>09/06/2018 22:15:40</publishTime>
     </File>
     <File Include="Areas/HelpPage/Views/_ViewStart.cshtml">
-      <publishTime>06/09/2018 22:14:35</publishTime>
+      <publishTime>09/06/2018 22:14:35</publishTime>
     </File>
     <File Include="bin/Antlr3.Runtime.dll">
       <publishTime>02/22/2013 08:43:40</publishTime>
@@ -158,10 +158,10 @@
       <publishTime>05/01/2012 11:08:46</publishTime>
     </File>
     <File Include="bin/NebulaApi.dll">
-      <publishTime>10/13/2018 12:00:31</publishTime>
+      <publishTime>11/14/2018 23:37:08</publishTime>
     </File>
     <File Include="bin/NebulaApi.pdb">
-      <publishTime>10/13/2018 12:00:31</publishTime>
+      <publishTime>11/14/2018 23:37:08</publishTime>
     </File>
     <File Include="bin/Newtonsoft.Json.dll">
       <publishTime>03/08/2014 20:33:56</publishTime>

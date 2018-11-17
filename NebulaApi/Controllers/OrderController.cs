@@ -16,7 +16,7 @@ namespace NebulaApi.Controllers
         /// <param name="order">заказ</param>
         /// <returns></returns>
         [HttpPost]
-        [Authorize (Roles = "Waiter, Admin")]
+        [Authorize(Roles = "Waiter, Admin")]
         public IHttpActionResult New(OrderViewModel order)
         {
             if (order == null || order.Dishes == null)
@@ -79,6 +79,7 @@ namespace NebulaApi.Controllers
             db.SaveChanges();
             return Ok();
         }
+
         /// <summary>
         /// Получение открытых заказов (официант, кухня и бар будут брать блюда отсюда)
         /// </summary>
@@ -112,13 +113,29 @@ namespace NebulaApi.Controllers
         }
 
         /// <summary>
+        /// Закрытие заказа 
+        /// </summary>
+        /// <param name="tableNumber">номер стола</param>
+        /// <returns></returns>
+        [HttpPost]
+        [Authorize(Roles = "Bartender, Admin")]
+        public IHttpActionResult Close(int tableNumber)
+        {
+            var db = new ApplicationDbContext();
+            db.Customs.Where(c => c.TableNumber == tableNumber && c.IsOpened).ToList().ForEach(c => { c.IsOpened = false; });
+
+            db.SaveChanges();
+            return Ok();
+        }
+
+        /// <summary>
         /// Смена состояния блюда на готовое
         /// </summary>
         /// <param name="id">идентификатор блюда</param>
         /// <param name="dishState">статус блюда</param>
         /// <returns></returns>
         [HttpPost]
-        [Authorize (Roles = "Admin, Bartender, Cook")]
+        [Authorize(Roles = "Admin, Bartender, Cook, Waiter")]
         public IHttpActionResult SetState(int id, DishState dishState)
         {
             var db = new ApplicationDbContext();
@@ -130,26 +147,6 @@ namespace NebulaApi.Controllers
             dish.DishState = dishState;
             db.SaveChanges();
             return Ok();
-        }
-
-        /// <summary>
-        /// Закрытие заказа 
-        /// </summary>
-        /// <param name="tableNumber">номер стола</param>
-        /// <returns></returns>
-        [HttpPost]
-        [Authorize(Roles = "Bartender, Admin")]
-        public IHttpActionResult Close(int tableNumber)
-        {
-            var db = new ApplicationDbContext();
-            var customs = db.Customs.FirstOrDefault(c => c.TableNumber == tableNumber && c.IsOpened);
-            if (customs != null)
-            {
-                customs.IsOpened = false;
-                db.SaveChanges();
-                return Ok();
-            }
-            return BadRequest("Заказ не найден!");
         }
     }
 }
