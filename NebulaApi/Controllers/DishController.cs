@@ -54,7 +54,30 @@ namespace NebulaApi.Controllers
             }
             dish.DishState = dishState;
             db.SaveChanges();
-            return Ok();
+            return Ok(dish.Custom);
+        }
+        
+        /// <summary>
+        /// Добавление блюда
+        /// </summary>
+        /// <param name="dish">объект блюда</param>
+        /// <param name="idOrder">идентификатор заказа</param>
+        /// <returns></returns>
+        public IHttpActionResult AddDish(DishViewModel dish, int idOrder)
+        {
+            var db = new ApplicationDbContext();
+            var order = db.Customs.Find(idOrder);
+            var currentDish = db.Dishes.Find(dish.Id);
+
+            var newDish = new CookingDish()
+            {
+                Dish = currentDish,
+                DishState = DishState.InWork,
+                IsActive = true
+            };
+            order.CookingDishes.Add(newDish);
+
+            return Ok(order);
         }
     }
 }

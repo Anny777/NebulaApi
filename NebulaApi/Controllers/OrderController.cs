@@ -11,6 +11,16 @@ namespace NebulaApi.Controllers
     public class OrderController : ApiController
     {
         /// <summary>
+        /// Получение заказа по id
+        /// </summary>
+        /// <param name="id">идентификатор заказа</param>
+        /// <returns></returns>
+        public IHttpActionResult GetOrder(int id)
+        {
+            return Ok(new ApplicationDbContext().Customs.Find(id));
+        }
+
+        /// <summary>
         /// Создание нового заказа; Дополнение существующего заказа; Запрос на удаление блюда;
         /// </summary>
         /// <param name="order">заказ</param>
@@ -124,27 +134,6 @@ namespace NebulaApi.Controllers
             var db = new ApplicationDbContext();
             db.Customs.Where(c => c.TableNumber == tableNumber && c.IsOpened).ToList().ForEach(c => { c.IsOpened = false; });
 
-            db.SaveChanges();
-            return Ok();
-        }
-
-        /// <summary>
-        /// Смена состояния блюда на готовое
-        /// </summary>
-        /// <param name="id">идентификатор блюда</param>
-        /// <param name="dishState">статус блюда</param>
-        /// <returns></returns>
-        [HttpPost]
-        [Authorize(Roles = "Admin, Bartender, Cook, Waiter")]
-        public IHttpActionResult SetState(int id, DishState dishState)
-        {
-            var db = new ApplicationDbContext();
-            var dish = db.CookingDishes.Find(id);
-            if (dish == null)
-            {
-                return BadRequest("Блюдо не найдено!");
-            }
-            dish.DishState = dishState;
             db.SaveChanges();
             return Ok();
         }

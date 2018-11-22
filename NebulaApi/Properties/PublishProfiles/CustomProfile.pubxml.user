@@ -158,10 +158,10 @@
       <publishTime>05/01/2012 11:08:46</publishTime>
     </File>
     <File Include="bin/NebulaApi.dll">
-      <publishTime>11/14/2018 23:37:08</publishTime>
+      <publishTime>11/20/2018 20:04:44</publishTime>
     </File>
     <File Include="bin/NebulaApi.pdb">
-      <publishTime>11/14/2018 23:37:08</publishTime>
+      <publishTime>11/20/2018 20:04:44</publishTime>
     </File>
     <File Include="bin/Newtonsoft.Json.dll">
       <publishTime>03/08/2014 20:33:56</publishTime>
