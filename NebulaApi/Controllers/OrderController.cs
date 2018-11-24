@@ -11,13 +11,43 @@ namespace NebulaApi.Controllers
     public class OrderController : ApiController
     {
         /// <summary>
-        /// Получение заказа по id
+        /// Получение заказа по номеру стола
         /// </summary>
-        /// <param name="id">идентификатор заказа</param>
+        /// <param name="table">номер стола</param>
         /// <returns></returns>
-        public IHttpActionResult GetOrder(int id)
+        [HttpGet]
+        [Authorize]
+        public IHttpActionResult GetOrder(int table)
         {
-            return Ok(new ApplicationDbContext().Customs.Find(id));
+            var c = new ApplicationDbContext().Customs.FirstOrDefault(o => o.IsActive && o.IsOpened && o.TableNumber == table);
+
+            if (c == null)
+            {
+                return Ok();
+            }
+
+            var order = new OrderViewModel()
+            {
+                Id = c.Id,
+                Table = c.TableNumber,
+                Dishes = c.CookingDishes.Where(a => a.DishState != DishState.Deleted).Select(b => new DishViewModel()
+                {
+                    Id = b.Dish.Id,
+                    CookingDishId = b.Id,
+                    Name = b.Dish.name,
+                    Unit = b.Dish.Unit,
+                    Consist = b.Dish.Consist,
+                    Comment = b.Comment,
+                    State = b.DishState,
+                    Price = b.Dish.sellingPrice,
+                    WorkshopType = b.Dish.WorkshopType,
+                    CreatedDate = b.CreatedDate
+                }),
+                CreatedDate = c.CreatedDate
+            };
+
+            return Ok(order);
+
         }
 
         /// <summary>
