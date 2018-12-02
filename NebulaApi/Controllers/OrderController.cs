@@ -58,7 +58,8 @@ namespace NebulaApi.Controllers
             {
                 IsOpened = true,
                 TableNumber = order.Table,
-                CookingDishes = new List<CookingDish>()
+                CookingDishes = new List<CookingDish>(),
+                Comment = order.Comment
             };
             db.Customs.Add(o);
             //}
