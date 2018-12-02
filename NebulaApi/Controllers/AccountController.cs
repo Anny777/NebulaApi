@@ -24,7 +24,7 @@ namespace NebulaApi.Controllers
 
     [EnableCors(origins: "*", headers: "*", methods: "*")]
     [Authorize]
-    [RoutePrefix("api/Account")]
+    [RoutePrefix("Account")]
     public class AccountController : ApiController
     {
         private const string LocalLoginProvider = "Local";

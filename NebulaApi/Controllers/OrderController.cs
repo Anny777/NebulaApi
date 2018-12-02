@@ -1,6 +1,7 @@
 ﻿using NebulaApi.Models;
 using NebulaApi.ViewModels;
 using ProjectOrderFood.Enums;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
 using System.Web.Http.Cors;
@@ -8,6 +9,7 @@ using System.Web.Http.Cors;
 namespace NebulaApi.Controllers
 {
     [EnableCors(origins: "*", headers: "*", methods: "*")]
+    [RoutePrefix("Order")]
     public class OrderController : ApiController
     {
         /// <summary>
@@ -16,37 +18,18 @@ namespace NebulaApi.Controllers
         /// <param name="table">номер стола</param>
         /// <returns></returns>
         [HttpGet]
-        [Authorize]
+        [Authorize(Roles = "Waiter, Bartender, Cook, Admin")]
+        [Route("GetOrder")]
         public IHttpActionResult GetOrder(int table)
         {
-            var c = new ApplicationDbContext().Customs.FirstOrDefault(o => o.IsActive && o.IsOpened && o.TableNumber == table);
+            var order = new ApplicationDbContext().Customs.FirstOrDefault(o => o.IsActive && o.IsOpened && o.TableNumber == table);
 
-            if (c == null)
+            if (order == null)
             {
                 return Ok();
             }
 
-            var order = new OrderViewModel()
-            {
-                Id = c.Id,
-                Table = c.TableNumber,
-                Dishes = c.CookingDishes.Where(a => a.DishState != DishState.Deleted).Select(b => new DishViewModel()
-                {
-                    Id = b.Dish.Id,
-                    CookingDishId = b.Id,
-                    Name = b.Dish.name,
-                    Unit = b.Dish.Unit,
-                    Consist = b.Dish.Consist,
-                    Comment = b.Comment,
-                    State = b.DishState,
-                    Price = b.Dish.sellingPrice,
-                    WorkshopType = b.Dish.WorkshopType,
-                    CreatedDate = b.CreatedDate
-                }),
-                CreatedDate = c.CreatedDate
-            };
-
-            return Ok(order);
+            return Ok(order.ToViewModel());
 
         }
 
@@ -57,6 +40,7 @@ namespace NebulaApi.Controllers
         /// <returns></returns>
         [HttpPost]
         [Authorize(Roles = "Waiter, Admin")]
+        [Route("New")]
         public IHttpActionResult New(OrderViewModel order)
         {
             if (order == null || order.Dishes == null)
@@ -65,59 +49,53 @@ namespace NebulaApi.Controllers
             }
             var db = new ApplicationDbContext();
 
-            // Новый заказ
-            if (order.Id <= 0)
+            //// Новый заказ
+            //if (order.Id <= 0)
+            //{
+            //var od = order.Dishes.Select(d => d.Id).Distinct().ToArray();
+            //var dishes = db.Dishes.Where(c => od.Contains(c.Id)).ToList();
+            var o = new Custom()
             {
-                var od = order.Dishes.Select(d => d.Id).Distinct().ToArray();
-                var dishes = db.Dishes.Where(c => od.Contains(c.Id)).ToList();
-                var o = new Custom()
-                {
-                    IsOpened = true,
-                    TableNumber = order.Table,
-                    CookingDishes = order.Dishes.Select(a => new CookingDish()
-                    {
-                        Comment = a.Comment,
-                        Dish = dishes.Single(c => c.Id == a.Id),
-                        DishState = DishState.InWork,
-                        CreatedDate = a.CreatedDate
-                    }).ToArray()
-                };
-                db.Customs.Add(o);
-            }
-            else
-            {
-                var newDishes = order.Dishes.Where(d => d.CookingDishId <= 0).ToArray();
-                var od = newDishes.Select(d => d.Id).Distinct().ToArray();
-                var custom = db.Customs.Find(order.Id);
+                IsOpened = true,
+                TableNumber = order.Table,
+                CookingDishes = new List<CookingDish>()
+            };
+            db.Customs.Add(o);
+            //}
+            //else
+            //{
+            //    var newDishes = order.Dishes.Where(d => d.CookingDishId <= 0).ToArray();
+            //    var od = newDishes.Select(d => d.Id).Distinct().ToArray();
+            //    var custom = db.Customs.Find(order.Id);
 
-                if (od.Count() > 0)
-                {
-                    var dishes = db.Dishes.Where(c => od.Contains(c.Id)).ToArray();
+            //    if (od.Count() > 0)
+            //    {
+            //        var dishes = db.Dishes.Where(c => od.Contains(c.Id)).ToArray();
 
 
-                    if (custom == null)
-                    {
-                        return BadRequest("Не найден заказ");
-                    }
-                    newDishes.Select(a => new CookingDish()
-                    {
-                        Comment = a.Comment,
-                        Dish = dishes.Single(c => c.Id == a.Id),
-                        DishState = DishState.InWork,
-                        CreatedDate = a.CreatedDate
-                    }).ToList().ForEach(custom.CookingDishes.Add);
-                }
+            //        if (custom == null)
+            //        {
+            //            return BadRequest("Не найден заказ");
+            //        }
+            //        newDishes.Select(a => new CookingDish()
+            //        {
+            //            Comment = a.Comment,
+            //            Dish = dishes.Single(c => c.Id == a.Id),
+            //            DishState = DishState.InWork,
+            //            CreatedDate = a.CreatedDate
+            //        }).ToList().ForEach(custom.CookingDishes.Add);
+            //    }
 
-                // Запрос на удаление блюда из заказа (с помощью Except возвращает блюда, которым нужно сменить статус)
-                var crd = custom.CookingDishes.Select(c => c.Id)
-                    .Except(order.Dishes.Where(c => c.CookingDishId > 0).Select(c => c.CookingDishId));
+            //    // Запрос на удаление блюда из заказа (с помощью Except возвращает блюда, которым нужно сменить статус)
+            //    var crd = custom.CookingDishes.Select(c => c.Id)
+            //        .Except(order.Dishes.Where(c => c.CookingDishId > 0).Select(c => c.CookingDishId));
 
-                db.CookingDishes.Where(c => crd.Contains(c.Id)).ToList()
-                    .ForEach(c => { c.DishState = DishState.CancellationRequested; });
-            }
+            //    db.CookingDishes.Where(c => crd.Contains(c.Id)).ToList()
+            //        .ForEach(c => { c.DishState = DishState.CancellationRequested; });
+            //}
 
             db.SaveChanges();
-            return Ok();
+            return Ok(o.ToViewModel());
         }
 
         /// <summary>
@@ -125,31 +103,13 @@ namespace NebulaApi.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        [Authorize]
+        [Authorize(Roles = "Waiter, Bartender, Cook, Admin")]
+        [Route("List")]
         public IHttpActionResult List()
         {
             var db = new ApplicationDbContext();
-            var orders = db.Customs.Where(c => c.IsOpened).Select(c => new OrderViewModel()
-            {
-                Id = c.Id,
-                Table = c.TableNumber,
-                Dishes = c.CookingDishes.Where(a => a.DishState != DishState.Deleted).Select(b => new DishViewModel()
-                {
-                    Id = b.Dish.Id,
-                    CookingDishId = b.Id,
-                    Name = b.Dish.name,
-                    Unit = b.Dish.Unit,
-                    Consist = b.Dish.Consist,
-                    Comment = b.Comment,
-                    State = b.DishState,
-                    Price = b.Dish.sellingPrice,
-                    WorkshopType = b.Dish.WorkshopType,
-                    CreatedDate = b.CreatedDate
-                }),
-                CreatedDate = c.CreatedDate
-            });
-
-            return Json(orders.ToArray());
+            var orders = db.Customs.Where(c => c.IsOpened).ToList().Select(c => c.ToViewModel());
+            return Ok(orders);
         }
 
         /// <summary>
@@ -159,6 +119,7 @@ namespace NebulaApi.Controllers
         /// <returns></returns>
         [HttpPost]
         [Authorize(Roles = "Bartender, Admin")]
+        [Route("Close")]
         public IHttpActionResult Close(int tableNumber)
         {
             var db = new ApplicationDbContext();

@@ -24,6 +24,11 @@ namespace NebulaApi.ViewModels
         /// Дата создания
         /// </summary>
         public DateTime CreatedDate { get; set; }
+
+        /// <summary>
+        /// Комментарий к заказу
+        /// </summary>
+        public string Comment { get; set; }
     }
 
     public class Dish

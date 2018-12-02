@@ -252,6 +252,10 @@
     <Compile Include="Migrations\201809171924511__.Designer.cs">
       <DependentUpon>201809171924511__.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201812021923120__1.cs" />
+    <Compile Include="Migrations\201812021923120__1.Designer.cs">
+      <DependentUpon>201812021923120__1.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountBindingModels.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -282,6 +286,7 @@
     <Content Include="Global.asax" />
     <Content Include="Migrations\201809171923189.sql" />
     <Content Include="Migrations\201809171924511.sql" />
+    <Content Include="Migrations\201812021923120__1.sql" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Areas\HelpPage\Views\Web.config" />
@@ -355,6 +360,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201809171924511__.resx">
       <DependentUpon>201809171924511__.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201812021923120__1.resx">
+      <DependentUpon>201812021923120__1.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

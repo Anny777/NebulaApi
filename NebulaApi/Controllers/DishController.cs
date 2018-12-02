@@ -8,7 +8,7 @@ using ProjectOrderFood.Enums;
 namespace NebulaApi.Controllers
 {
     [EnableCors(origins: "*", headers: "*", methods: "*")]
-    //Get (api/value)
+    [RoutePrefix("Dish")]
     public class DishController : ApiController
     {
         //public void SetToken(string token)
@@ -21,7 +21,8 @@ namespace NebulaApi.Controllers
         /// /// </summary>
         /// <returns></returns>
         [HttpGet]
-        [Authorize]
+        [Authorize(Roles = "Waiter, Bartender, Cook, Admin")]
+        [Route("List")]
         public IHttpActionResult List()
         {
             var db = new ApplicationDbContext();
@@ -44,40 +45,59 @@ namespace NebulaApi.Controllers
         /// <returns></returns>
         [HttpPost]
         [Authorize(Roles = "Admin, Bartender, Cook, Waiter")]
+        [Route("SetState")]
         public IHttpActionResult SetState(int id, DishState dishState)
         {
-            var db = new ApplicationDbContext();
-            var dish = db.CookingDishes.Find(id);
-            if (dish == null)
+            try
             {
-                return BadRequest("Блюдо не найдено!");
+                var db = new ApplicationDbContext();
+                var dish = db.CookingDishes.Find(id);
+                if (dish == null)
+                {
+                    return BadRequest("Блюдо не найдено!");
+                }
+                dish.DishState = dishState;
+                db.SaveChanges();
+                return Ok(dish.Custom.ToViewModel());
             }
-            dish.DishState = dishState;
-            db.SaveChanges();
-            return Ok(dish.Custom);
+            catch (System.Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
-        
+
         /// <summary>
         /// Добавление блюда
         /// </summary>
         /// <param name="dish">объект блюда</param>
         /// <param name="idOrder">идентификатор заказа</param>
         /// <returns></returns>
+        [HttpPost]
+        [Authorize(Roles = "Admin, Bartender, Waiter")]
+        [Route("AddDish")]
         public IHttpActionResult AddDish(DishViewModel dish, int idOrder)
         {
-            var db = new ApplicationDbContext();
-            var order = db.Customs.Find(idOrder);
-            var currentDish = db.Dishes.Find(dish.Id);
-
-            var newDish = new CookingDish()
+            try
             {
-                Dish = currentDish,
-                DishState = DishState.InWork,
-                IsActive = true
-            };
-            order.CookingDishes.Add(newDish);
+                var db = new ApplicationDbContext();
+                var order = db.Customs.Find(idOrder);
+                var currentDish = db.Dishes.Find(dish.Id);
 
-            return Ok(order);
+                var newDish = new CookingDish()
+                {
+                    Dish = currentDish,
+                    DishState = DishState.InWork,
+                    IsActive = true
+                };
+                order.CookingDishes.Add(newDish);
+                db.SaveChanges();
+
+                return Ok(order.ToViewModel());
+            }
+            catch (System.Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
     }
 }
