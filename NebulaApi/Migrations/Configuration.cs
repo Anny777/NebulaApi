@@ -9,7 +9,8 @@ namespace NebulaApi.Migrations
     {
         public Configuration()
         {
-            AutomaticMigrationsEnabled = false;
+            AutomaticMigrationsEnabled = true;
+            AutomaticMigrationDataLossAllowed = true;
         }
 
         protected override void Seed(NebulaApi.Models.ApplicationDbContext context)

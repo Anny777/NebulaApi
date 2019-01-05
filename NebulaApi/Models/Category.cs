@@ -1,10 +1,11 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using ProjectOrderFood.Enums;
 
 namespace NebulaApi.Models
 {
-    public class Category : ModelBase
+    public class Category : ModelBaseSync
     {
         public string Name { get; set; }
-        public string UrlImage { get; set; }
+        public string Code { get; set; }
+        public WorkshopType WorkshopType { get; set; }
     }
 }

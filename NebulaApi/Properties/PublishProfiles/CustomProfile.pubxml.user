@@ -158,10 +158,19 @@
       <publishTime>05/01/2012 11:08:46</publishTime>
     </File>
     <File Include="bin/NebulaApi.dll">
-      <publishTime>11/25/2018 21:17:36</publishTime>
+      <publishTime>12/23/2018 19:39:25</publishTime>
     </File>
     <File Include="bin/NebulaApi.pdb">
-      <publishTime>11/25/2018 21:17:36</publishTime>
+      <publishTime>12/23/2018 19:39:25</publishTime>
+    </File>
+    <File Include="bin/NebulaSync.exe">
+      <publishTime>12/23/2018 19:39:21</publishTime>
+    </File>
+    <File Include="bin/NebulaSync.exe.config">
+      <publishTime>12/23/2018 17:23:24</publishTime>
+    </File>
+    <File Include="bin/NebulaSync.pdb">
+      <publishTime>12/23/2018 19:39:21</publishTime>
     </File>
     <File Include="bin/Newtonsoft.Json.dll">
       <publishTime>03/08/2014 20:33:56</publishTime>
@@ -456,6 +465,18 @@
     </File>
     <File Include="Migrations/201809171924511.sql">
       <publishTime>09/17/2018 22:31:37</publishTime>
+    </File>
+    <File Include="Migrations/201812021923120__1.sql">
+      <publishTime>02/12/2018 22:24:56</publishTime>
+    </File>
+    <File Include="Migrations/201812081229316__2.sql">
+      <publishTime>12/08/2018 15:30:41</publishTime>
+    </File>
+    <File Include="Migrations/201812081238479__3.sql">
+      <publishTime>12/08/2018 15:39:36</publishTime>
+    </File>
+    <File Include="Migrations/201812231412060__4.sql">
+      <publishTime>12/23/2018 17:13:04</publishTime>
     </File>
     <File Include="Scripts/bootstrap.js">
       <publishTime>06/09/2018 22:14:52</publishTime>

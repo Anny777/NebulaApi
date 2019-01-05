@@ -34,7 +34,7 @@ namespace NebulaApi.Controllers
         }
 
         /// <summary>
-        /// Создание нового заказа; Дополнение существующего заказа; Запрос на удаление блюда;
+        /// Создание нового заказа
         /// </summary>
         /// <param name="order">заказ</param>
         /// <returns></returns>
@@ -124,9 +124,107 @@ namespace NebulaApi.Controllers
         public IHttpActionResult Close(int tableNumber)
         {
             var db = new ApplicationDbContext();
-            db.Customs.Where(c => c.TableNumber == tableNumber && c.IsOpened).ToList().ForEach(c => { c.IsOpened = false; });
+            db.Customs.Where(c => c.TableNumber == tableNumber && c.IsOpened && c.IsActive).ToList().ForEach(c => { c.IsOpened = false; });
 
             db.SaveChanges();
+            return Ok();
+        }
+
+        /// <summary>
+        /// Добавление комментария к заказу
+        /// </summary>
+        /// <param name="order"></param>
+        /// <returns></returns>
+        [HttpPost]
+        [Authorize(Roles ="Waiter, Bartender, Admin")]
+        [Route("AddComment")]
+        public IHttpActionResult AddComment(OrderViewModel order)
+        {
+            try
+            {
+                var db = new ApplicationDbContext();
+                var o = db.Customs.Find(order.Id);
+                o.Comment = order.Comment;
+
+                db.SaveChanges();
+
+                return Ok(o.ToViewModel());
+            }
+            catch (System.Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// Проставление флага заказу для его синхронизации
+        /// </summary>
+        /// <param name="tableNumber"></param>
+        /// <returns></returns>
+        [HttpPost]
+        [Authorize(Roles = "Bartender, Admin")]
+        [Route("SetExportOrder")]
+        public IHttpActionResult SetExportOrder(int tableNumber)
+        {
+            var db = new ApplicationDbContext();
+            db.Customs.Where(c => c.IsActive && c.IsOpened && c.TableNumber == tableNumber).ToList().ForEach(c => { c.IsExportRequested = true; });
+            db.SaveChanges();
+
+            return Ok();
+        }
+
+        [Route("GetExportOrders")]
+        public IHttpActionResult GetExportOrders(string token)
+        {
+            if (!string.Equals("d3a71c3d-abd2-4833-9686-e5c8818c9054", token, System.StringComparison.InvariantCultureIgnoreCase))
+                return BadRequest("Доступ запрещен");
+
+            var result = new ApplicationDbContext()
+                .Customs
+                .Where(c => c.IsActive && c.IsExportRequested && c.IsOpened)
+                .ToArray()
+                .Select(c => new Order
+                {
+                    TableNumber = c.TableNumber.ToString(),
+                    Dishes = c.CookingDishes.GroupBy(d => d.Dish.ExternalId).Select(d => new Order.dish
+                    {
+                        GoodId = d.Key,
+                        Quantity = d.Count()
+                    }).ToArray()
+                })
+                .ToArray();
+
+            return Ok(result);
+        }
+
+        public class Order
+        {
+            public string TableNumber { get; set; }
+            public dish[] Dishes { get; set; }
+            public class dish
+            {
+                public int GoodId { get; set; }
+                public int Quantity { get; set; }
+            }
+        }
+
+        [HttpPost]
+        [Route("SetExportedOrders")]
+        public IHttpActionResult SetExportedOrders(string[] HandledOrders, string token)
+        {
+            if (!string.Equals("d3a71c3d-abd2-4833-9686-e5c8818c9054", token, System.StringComparison.InvariantCultureIgnoreCase))
+                return BadRequest("Доступ запрещен");
+
+            using (var db = new ApplicationDbContext())
+            {
+                db
+                    .Customs
+                    .Where(c => c.IsExportRequested && HandledOrders.Contains(c.TableNumber.ToString()))
+                    .ToList()
+                    .ForEach(c => c.IsExportRequested = false);
+                db.SaveChanges();
+            }
+
             return Ok();
         }
     }

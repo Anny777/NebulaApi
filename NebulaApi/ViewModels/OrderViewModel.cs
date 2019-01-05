@@ -29,17 +29,10 @@ namespace NebulaApi.ViewModels
         /// Комментарий к заказу
         /// </summary>
         public string Comment { get; set; }
-    }
 
-    public class Dish
-    {
         /// <summary>
-        /// Идентификатор заказанного блюда
+        /// Флаг экспорта заказа во внешнюю систему
         /// </summary>
-        public CookingDish cookingDish;
-        /// <summary>
-        /// Комментарий к блюду
-        /// </summary>
-        public string Comment;
+        public bool IsExportRequested { get; set; }
     }
 }

@@ -3,8 +3,6 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
-using Microsoft.AspNet.Identity.Owin;
-using ProjectOrderFood.Models;
 
 namespace NebulaApi.Models
 {
@@ -29,7 +27,6 @@ namespace NebulaApi.Models
 
         public virtual DbSet<Dish> Dishes { get; set; }
         public virtual DbSet<Category> Categories { get; set; }
-        public virtual DbSet<SubCategory> SubCategories { get; set; }
         public virtual DbSet<CookingDish> CookingDishes { get; set; }
         public virtual DbSet<Custom> Customs { get; set; }
 

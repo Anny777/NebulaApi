@@ -1,22 +1,17 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Web;
-using NebulaApi.Controllers;
-using ProjectOrderFood.Enums;
-using ProjectOrderFood.Models;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace NebulaApi.Models
 {
-    public class Dish : DishBase
+    public class Dish : ModelBaseSync
     {
-        public int Id { get; set; }
         public virtual Category Category { get; set; }
-        public virtual SubCategory SubCategory { get; set; }
         public string Consist { get; set; }
         public string Unit { get; set; }
         public bool IsAvailable { get; set; }
-        public virtual WorkshopType WorkshopType {  get; set; }
+        [Display(Name = "Название")]
+        public string Name { get; set; }
+        [Display(Name = "Цена")]
+        public decimal Price { get; set; }
 
     }
 }

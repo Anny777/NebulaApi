@@ -1,10 +1,5 @@
 ﻿using NebulaApi.Models;
 using ProjectOrderFood.Enums;
-using ProjectOrderFood.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 
 namespace NebulaApi.ViewModels
 {
@@ -41,6 +36,6 @@ namespace NebulaApi.ViewModels
         /// <summary>
         /// Цена блюда
         /// </summary>
-        public decimal? Price;
+        public decimal Price;
     }
 }

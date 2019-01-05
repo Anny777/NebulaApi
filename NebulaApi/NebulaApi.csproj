@@ -256,6 +256,18 @@
     <Compile Include="Migrations\201812021923120__1.Designer.cs">
       <DependentUpon>201812021923120__1.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201812081229316__2.cs" />
+    <Compile Include="Migrations\201812081229316__2.Designer.cs">
+      <DependentUpon>201812081229316__2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201812081238479__3.cs" />
+    <Compile Include="Migrations\201812081238479__3.Designer.cs">
+      <DependentUpon>201812081238479__3.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201812231412060__4.cs" />
+    <Compile Include="Migrations\201812231412060__4.Designer.cs">
+      <DependentUpon>201812231412060__4.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountBindingModels.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -263,11 +275,10 @@
     <Compile Include="Models\CookingDish.cs" />
     <Compile Include="Models\Custom.cs" />
     <Compile Include="Models\Dish.cs" />
-    <Compile Include="Models\DishBase.cs" />
     <Compile Include="Enums\DishState.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ModelBase.cs" />
-    <Compile Include="Models\SubCategory.cs" />
+    <Compile Include="Models\ModelBaseSync.cs" />
     <Compile Include="Enums\WorkshopType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Providers\ApplicationOAuthProvider.cs" />
@@ -286,6 +297,9 @@
     <Content Include="Global.asax" />
     <Content Include="Migrations\201809171923189.sql" />
     <Content Include="Migrations\201809171924511.sql" />
+    <Content Include="Migrations\201812231412060__4.sql" />
+    <Content Include="Migrations\201812081238479__3.sql" />
+    <Content Include="Migrations\201812081229316__2.sql" />
     <Content Include="Migrations\201812021923120__1.sql" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
@@ -364,6 +378,21 @@
     <EmbeddedResource Include="Migrations\201812021923120__1.resx">
       <DependentUpon>201812021923120__1.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201812081229316__2.resx">
+      <DependentUpon>201812081229316__2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201812081238479__3.resx">
+      <DependentUpon>201812081238479__3.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201812231412060__4.resx">
+      <DependentUpon>201812231412060__4.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\NebulaSync\NebulaSync.csproj">
+      <Project>{BBCD0B92-EEC6-4B38-A569-4ECCB9CF695F}</Project>
+      <Name>NebulaSync</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

@@ -1,6 +1,5 @@
 ﻿using NebulaApi.ViewModels;
 using ProjectOrderFood.Enums;
-using ProjectOrderFood.Models;
 
 namespace NebulaApi.Models
 {
@@ -16,16 +15,15 @@ namespace NebulaApi.Models
             return new DishViewModel()
             {
                 Id = Dish.Id,
-                Name = Dish.name,
+                Name = Dish.Name,
                 Consist = Dish.Consist,
-                Price = Dish.sellingPrice,
+                Price = Dish.Price,
                 Unit = Dish.Unit,
                 CookingDishId = Id,
                 IsActive = IsActive,
                 CreatedDate = CreatedDate,
                 State = DishState,
-                WorkshopType = Dish.WorkshopType
-
+                WorkshopType = Dish.Category.WorkshopType
             };
         }
     }

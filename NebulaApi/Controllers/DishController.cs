@@ -4,6 +4,7 @@ using System.Web.Http;
 using NebulaApi.ViewModels;
 using System.Web.Http.Cors;
 using ProjectOrderFood.Enums;
+using NebulaSync.ExternalModels;
 
 namespace NebulaApi.Controllers
 {
@@ -29,9 +30,9 @@ namespace NebulaApi.Controllers
             var response = db.Dishes.Select(c => new DishViewModel()
             {
                 Id = c.Id,
-                Name = c.name,
+                Name = c.Name,
                 Consist = c.Consist,
-                Price = c.sellingPrice,
+                Price = c.Price,
                 Unit = c.Unit
             }).OrderBy(b => b.Name).ToList();
             return Json(response);
@@ -98,6 +99,74 @@ namespace NebulaApi.Controllers
             {
                 return BadRequest(ex.Message);
             }
+        }
+
+        [HttpPost]
+        [Route("Sync")]
+        public IHttpActionResult Sync(SyncModel data, string token)
+        {
+            if (!string.Equals("d3a71c3d-abd2-4833-9686-e5c8818c9054", token, System.StringComparison.InvariantCultureIgnoreCase))
+                return BadRequest("Доступ запрещен");
+
+            if (data == null)
+                return BadRequest("Не переданы данные");
+
+            if (data.Categories == null || data.Categories.Length == 0)
+                return BadRequest("Передан пустой список категорий");
+
+            if (data.Goods == null || data.Goods.Length == 0)
+                return BadRequest("Передан пустой список блюд");
+
+            var db = new ApplicationDbContext();
+            db.Categories.AsParallel().ForAll(c => { c.IsActive = false; });
+            foreach (var category in data.Categories)
+            {
+                var current = db.Categories.FirstOrDefault(c => c.ExternalId == category.ID);
+                if (current == null)
+                {
+                    current = new Category()
+                    {
+                        WorkshopType = WorkshopType.Kitchen
+                    };
+                    db.Categories.Add(current);
+                }
+
+                current.ExternalId = category.ID;
+                current.Name = category.Name;
+                current.Code = category.Code;
+                current.IsActive = true;
+            }
+
+            db.SaveChanges();
+            db.Dishes.AsParallel().ForAll(c => { c.IsActive = false; });
+            var categories = db.Categories.ToArray();
+            foreach (var dish in data.Goods)
+            {
+                var current = db.Dishes.FirstOrDefault(c => c.ExternalId == dish.ID);
+                if (current == null)
+                {
+                    current = new Dish();
+                    db.Dishes.Add(current);
+                }
+
+                current.ExternalId = dish.ID;
+                current.Category = categories.Single(c => c.ExternalId == dish.GroupID || c.Code == dish.GroupID.ToString());
+                current.Name = dish.Name;
+                current.Consist = dish.Description;
+                current.IsAvailable = true;
+                current.Price = dish.PriceOut2.HasValue ? decimal.Parse(dish.PriceOut2.Value.ToString()) : 0;
+                current.Unit = dish.Measure1;
+                current.IsActive = true;
+            }
+
+            db.SaveChanges();
+            return Ok();
+        }
+
+        public class SyncModel
+        {
+            public Good[] Goods { get; set; }
+            public GoodsGroup[] Categories { get; set; }
         }
     }
 }

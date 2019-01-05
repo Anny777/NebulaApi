@@ -3,6 +3,7 @@
 ################################################################################
 
 /.vs
-/NebulaApi/bin
-/NebulaApi/obj
-/packages
+**/bin
+**/obj
+**/packages
+*.user
