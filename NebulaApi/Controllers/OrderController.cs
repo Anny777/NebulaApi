@@ -1,4 +1,5 @@
-﻿using NebulaApi.Models;
+﻿using Microsoft.AspNet.Identity;
+using NebulaApi.Models;
 using NebulaApi.ViewModels;
 using ProjectOrderFood.Enums;
 using System.Collections.Generic;
@@ -136,7 +137,7 @@ namespace NebulaApi.Controllers
         /// <param name="order"></param>
         /// <returns></returns>
         [HttpPost]
-        [Authorize(Roles ="Waiter, Bartender, Admin")]
+        [Authorize(Roles = "Waiter, Bartender, Cook, Admin")]
         [Route("AddComment")]
         public IHttpActionResult AddComment(OrderViewModel order)
         {
@@ -167,9 +168,15 @@ namespace NebulaApi.Controllers
         public IHttpActionResult SetExportOrder(int tableNumber)
         {
             var db = new ApplicationDbContext();
-            db.Customs.Where(c => c.IsActive && c.IsOpened && c.TableNumber == tableNumber).ToList().ForEach(c => { c.IsExportRequested = true; });
-            db.SaveChanges();
+            var u = db.Users.Find(User.Identity.GetUserId());
 
+            db.Customs.Where(c => c.IsActive && c.IsOpened && c.TableNumber == tableNumber).ToList().ForEach(c =>
+            {
+                c.IsExportRequested = true;
+                c.User = u;
+            });
+
+            db.SaveChanges();
             return Ok();
         }
 
@@ -186,7 +193,11 @@ namespace NebulaApi.Controllers
                 .Select(c => new Order
                 {
                     TableNumber = c.TableNumber.ToString(),
-                    Dishes = c.CookingDishes.GroupBy(d => d.Dish.ExternalId).Select(d => new Order.dish
+                    OperatorId = c.User.OperatorId,
+                    Dishes = c.CookingDishes
+                    .Where(d => d.IsActive && d.DishState == DishState.Taken)
+                    .GroupBy(d => d.Dish.ExternalId)
+                    .Select(d => new Order.dish
                     {
                         GoodId = d.Key,
                         Quantity = d.Count()
@@ -200,6 +211,7 @@ namespace NebulaApi.Controllers
         public class Order
         {
             public string TableNumber { get; set; }
+            public int OperatorId { get; set; }
             public dish[] Dishes { get; set; }
             public class dish
             {

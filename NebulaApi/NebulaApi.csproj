@@ -268,6 +268,14 @@
     <Compile Include="Migrations\201812231412060__4.Designer.cs">
       <DependentUpon>201812231412060__4.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201901061059427__5.cs" />
+    <Compile Include="Migrations\201901061059427__5.Designer.cs">
+      <DependentUpon>201901061059427__5.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201901061124177__6.cs" />
+    <Compile Include="Migrations\201901061124177__6.Designer.cs">
+      <DependentUpon>201901061124177__6.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountBindingModels.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -297,10 +305,12 @@
     <Content Include="Global.asax" />
     <Content Include="Migrations\201809171923189.sql" />
     <Content Include="Migrations\201809171924511.sql" />
+    <Content Include="Migrations\201901061059427__5.sql" />
     <Content Include="Migrations\201812231412060__4.sql" />
     <Content Include="Migrations\201812081238479__3.sql" />
     <Content Include="Migrations\201812081229316__2.sql" />
     <Content Include="Migrations\201812021923120__1.sql" />
+    <Content Include="Migrations\201901061124177__6.sql" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Areas\HelpPage\Views\Web.config" />
@@ -386,6 +396,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201812231412060__4.resx">
       <DependentUpon>201812231412060__4.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201901061059427__5.resx">
+      <DependentUpon>201901061059427__5.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201901061124177__6.resx">
+      <DependentUpon>201901061124177__6.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

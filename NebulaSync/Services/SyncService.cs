@@ -59,7 +59,7 @@ namespace NebulaSync.Services
                                 GoodID = dish.GoodId,
                                 PartnerID = 2,
                                 ObjectID = objectId,
-                                OperatorID = 4,
+                                OperatorID = exportOrder.OperatorId,
                                 Qtty = dish.Quantity,
                                 Sign = 0,
                                 PriceIn = 0, // ???
@@ -101,6 +101,7 @@ namespace NebulaSync.Services
         public class Order
         {
             public string TableNumber { get; set; }
+            public int OperatorId { get; set; }
             public dish[] Dishes { get; set; }
             public class dish
             {

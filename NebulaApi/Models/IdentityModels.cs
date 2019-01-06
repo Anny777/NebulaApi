@@ -7,7 +7,7 @@ using Microsoft.AspNet.Identity.EntityFramework;
 namespace NebulaApi.Models
 {
     // В профиль пользователя можно добавить дополнительные данные, если указать больше свойств для класса ApplicationUser. Подробности см. на странице https://go.microsoft.com/fwlink/?LinkID=317594.
-    public class ApplicationUser : IdentityUser
+    public class ApplicationUser : NebulaUser
     {
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<ApplicationUser> manager, string authenticationType)
         {
@@ -16,6 +16,11 @@ namespace NebulaApi.Models
             // Здесь добавьте настраиваемые утверждения пользователя
             return userIdentity;
         }
+    }
+
+    public class NebulaUser: IdentityUser
+    {
+        public virtual int OperatorId { get; set; }
     }
 
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
