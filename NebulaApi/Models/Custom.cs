@@ -20,16 +20,16 @@ namespace NebulaApi.Models
         public int TableNumber { get; set; }
         public string Comment { get; set; }
 
-        public OrderViewModel ToViewModel()
+        public static OrderViewModel ToViewModel(Custom custom, CookingDish[] cookingDishes)
         {
             return new OrderViewModel()
             {
-                Id = Id,
-                Table = TableNumber,
-                Dishes = CookingDishes.Select(c => c.ToViewModel()),
-                CreatedDate = CreatedDate,
-                Comment = Comment,
-                IsExportRequested = IsExportRequested
+                Id = custom.Id,
+                Table = custom.TableNumber,
+                Dishes = cookingDishes.Select(c => CookingDish.ToViewModel(c.Dish, c)).ToArray(),
+                CreatedDate = custom.CreatedDate,
+                Comment = custom.Comment,
+                IsExportRequested = custom.IsExportRequested
             };
         }
     }

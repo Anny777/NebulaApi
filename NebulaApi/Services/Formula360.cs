@@ -18,7 +18,7 @@ namespace NebulaApi.Services
 //#else
 //            data = Formula360Connection.Get("https://lk.formula360.ru/services/remains/0/10000");
 //#endif
-//            var db = new ApplicationDbContext();
+//            using (var db = new ApplicationDbContext()){
 
 //            var extDishes = new JavaScriptSerializer().Deserialize<DishBaseObjects[]>(data);
 //            var extDishesIds = extDishes.Select(c => c._id);
@@ -52,7 +52,7 @@ namespace NebulaApi.Services
 //            }
 
 //            db.SaveChanges();
-//        }
+//        }}
 //    }
 
 //    public static class Formula360Connection

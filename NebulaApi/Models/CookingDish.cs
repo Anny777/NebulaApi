@@ -10,20 +10,20 @@ namespace NebulaApi.Models
         public virtual Custom Custom { get; set; }
         public string Comment { get; set; }
 
-        public DishViewModel ToViewModel()
+        public static DishViewModel ToViewModel(Dish dish, CookingDish cookingDish)
         {
             return new DishViewModel()
             {
-                Id = Dish.Id,
-                Name = Dish.Name,
-                Consist = Dish.Consist,
-                Price = Dish.Price,
-                Unit = Dish.Unit,
-                CookingDishId = Id,
-                IsActive = IsActive,
-                CreatedDate = CreatedDate,
-                State = DishState,
-                WorkshopType = Dish.Category.WorkshopType
+                Id = dish.Id,
+                Name = dish.Name,
+                Consist = dish.Consist,
+                Price = dish.Price,
+                Unit = dish.Unit,
+                CookingDishId = cookingDish.Id,
+                IsActive = cookingDish.IsActive,
+                CreatedDate = cookingDish.CreatedDate,
+                State = cookingDish.DishState,
+                WorkshopType = dish.Category.WorkshopType
             };
         }
     }

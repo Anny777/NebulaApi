@@ -1,10 +1,10 @@
-﻿using System.Linq;
-using NebulaApi.Models;
-using System.Web.Http;
+﻿using NebulaApi.Models;
 using NebulaApi.ViewModels;
-using System.Web.Http.Cors;
-using ProjectOrderFood.Enums;
 using NebulaSync.ExternalModels;
+using ProjectOrderFood.Enums;
+using System.Linq;
+using System.Web.Http;
+using System.Web.Http.Cors;
 
 namespace NebulaApi.Controllers
 {
@@ -26,16 +26,18 @@ namespace NebulaApi.Controllers
         [Route("List")]
         public IHttpActionResult List()
         {
-            var db = new ApplicationDbContext();
-            var response = db.Dishes.Select(c => new DishViewModel()
+            using (var db = new ApplicationDbContext())
             {
-                Id = c.Id,
-                Name = c.Name,
-                Consist = c.Consist,
-                Price = c.Price,
-                Unit = c.Unit
-            }).OrderBy(b => b.Name).ToList();
-            return Json(response);
+                var response = db.Dishes.Select(c => new DishViewModel()
+                {
+                    Id = c.Id,
+                    Name = c.Name,
+                    Consist = c.Consist,
+                    Price = c.Price,
+                    Unit = c.Unit
+                }).OrderBy(b => b.Name).ToList();
+                return Json(response);
+            }
         }
 
         /// <summary>
@@ -51,15 +53,17 @@ namespace NebulaApi.Controllers
         {
             try
             {
-                var db = new ApplicationDbContext();
-                var dish = db.CookingDishes.Find(id);
-                if (dish == null)
+                using (var db = new ApplicationDbContext())
                 {
-                    return BadRequest("Блюдо не найдено!");
+                    var dish = db.CookingDishes.Find(id);
+                    if (dish == null)
+                    {
+                        return BadRequest("Блюдо не найдено!");
+                    }
+                    dish.DishState = dishState;
+                    db.SaveChanges();
+                    return Ok(Custom.ToViewModel(dish.Custom, dish.Custom.CookingDishes.ToArray()));
                 }
-                dish.DishState = dishState;
-                db.SaveChanges();
-                return Ok(dish.Custom.ToViewModel());
             }
             catch (System.Exception ex)
             {
@@ -80,20 +84,22 @@ namespace NebulaApi.Controllers
         {
             try
             {
-                var db = new ApplicationDbContext();
-                var order = db.Customs.Find(idOrder);
-                var currentDish = db.Dishes.Find(dish.Id);
-
-                var newDish = new CookingDish()
+                using (var db = new ApplicationDbContext())
                 {
-                    Dish = currentDish,
-                    DishState = DishState.InWork,
-                    IsActive = true
-                };
-                order.CookingDishes.Add(newDish);
-                db.SaveChanges();
+                    var order = db.Customs.Find(idOrder);
+                    var currentDish = db.Dishes.Find(dish.Id);
 
-                return Ok(order.ToViewModel());
+                    var newDish = new CookingDish()
+                    {
+                        Dish = currentDish,
+                        DishState = DishState.InWork,
+                        IsActive = true
+                    };
+                    order.CookingDishes.Add(newDish);
+                    db.SaveChanges();
+
+                    return Ok(Custom.ToViewModel(order, order.CookingDishes.ToArray()));
+                }
             }
             catch (System.Exception ex)
             {
@@ -117,50 +123,52 @@ namespace NebulaApi.Controllers
             if (data.Goods == null || data.Goods.Length == 0)
                 return BadRequest("Передан пустой список блюд");
 
-            var db = new ApplicationDbContext();
-            db.Categories.AsParallel().ForAll(c => { c.IsActive = false; });
-            foreach (var category in data.Categories)
+            using (var db = new ApplicationDbContext())
             {
-                var current = db.Categories.FirstOrDefault(c => c.ExternalId == category.ID);
-                if (current == null)
+                db.Categories.AsParallel().ForAll(c => { c.IsActive = false; });
+                foreach (var category in data.Categories)
                 {
-                    current = new Category()
+                    var current = db.Categories.FirstOrDefault(c => c.ExternalId == category.ID);
+                    if (current == null)
                     {
-                        WorkshopType = WorkshopType.Kitchen
-                    };
-                    db.Categories.Add(current);
+                        current = new Category()
+                        {
+                            WorkshopType = WorkshopType.Kitchen
+                        };
+                        db.Categories.Add(current);
+                    }
+
+                    current.ExternalId = category.ID;
+                    current.Name = category.Name;
+                    current.Code = category.Code;
+                    current.IsActive = true;
                 }
 
-                current.ExternalId = category.ID;
-                current.Name = category.Name;
-                current.Code = category.Code;
-                current.IsActive = true;
-            }
-
-            db.SaveChanges();
-            db.Dishes.AsParallel().ForAll(c => { c.IsActive = false; });
-            var categories = db.Categories.ToArray();
-            foreach (var dish in data.Goods)
-            {
-                var current = db.Dishes.FirstOrDefault(c => c.ExternalId == dish.ID);
-                if (current == null)
+                db.SaveChanges();
+                db.Dishes.AsParallel().ForAll(c => { c.IsActive = false; });
+                var categories = db.Categories.ToArray();
+                foreach (var dish in data.Goods)
                 {
-                    current = new Dish();
-                    db.Dishes.Add(current);
+                    var current = db.Dishes.FirstOrDefault(c => c.ExternalId == dish.ID);
+                    if (current == null)
+                    {
+                        current = new Dish();
+                        db.Dishes.Add(current);
+                    }
+
+                    current.ExternalId = dish.ID;
+                    current.Category = categories.Single(c => c.ExternalId == dish.GroupID || c.Code == dish.GroupID.ToString());
+                    current.Name = dish.Name;
+                    current.Consist = dish.Description;
+                    current.IsAvailable = true;
+                    current.Price = dish.PriceOut2.HasValue ? decimal.Parse(dish.PriceOut2.Value.ToString()) : 0;
+                    current.Unit = dish.Measure1;
+                    current.IsActive = true;
                 }
 
-                current.ExternalId = dish.ID;
-                current.Category = categories.Single(c => c.ExternalId == dish.GroupID || c.Code == dish.GroupID.ToString());
-                current.Name = dish.Name;
-                current.Consist = dish.Description;
-                current.IsAvailable = true;
-                current.Price = dish.PriceOut2.HasValue ? decimal.Parse(dish.PriceOut2.Value.ToString()) : 0;
-                current.Unit = dish.Measure1;
-                current.IsActive = true;
+                db.SaveChanges();
+                return Ok();
             }
-
-            db.SaveChanges();
-            return Ok();
         }
 
         public class SyncModel
