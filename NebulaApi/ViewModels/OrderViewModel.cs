@@ -34,5 +34,14 @@ namespace NebulaApi.ViewModels
         /// Флаг экспорта заказа во внешнюю систему
         /// </summary>
         public bool IsExportRequested { get; set; }
+
+        /// <summary>
+        /// Gets or sets the current memory.
+        /// </summary>
+        /// <value>
+        /// The current memory.
+        /// </value>
+        public string CurrentMemory { get; set; }
+        public string TotalMemory { get; internal set; }
     }
 }

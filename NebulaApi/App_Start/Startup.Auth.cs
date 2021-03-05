@@ -40,7 +40,7 @@ namespace NebulaApi
                 AuthorizeEndpointPath = new PathString("/api/Account/ExternalLogin"),
                 AccessTokenExpireTimeSpan = TimeSpan.FromDays(14),
                 // В рабочем режиме задайте AllowInsecureHttp = false
-                AllowInsecureHttp = true
+                AllowInsecureHttp = true,
             };
 
             // Включение использования приложением маркера-носителя для аутентификации пользователей

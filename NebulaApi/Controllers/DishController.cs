@@ -28,7 +28,7 @@ namespace NebulaApi.Controllers
         {
             using (var db = new ApplicationDbContext())
             {
-                var response = db.Dishes.Select(c => new DishViewModel()
+                var response = db.Dishes.Where(c => c.Name != "" && c.Unit != "").Select(c => new DishViewModel()
                 {
                     Id = c.Id,
                     Name = c.Name,

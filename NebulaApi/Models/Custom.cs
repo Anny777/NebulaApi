@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNet.Identity.EntityFramework;
 using NebulaApi.ViewModels;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 namespace NebulaApi.Models
@@ -29,7 +31,9 @@ namespace NebulaApi.Models
                 Dishes = cookingDishes.Select(c => CookingDish.ToViewModel(c.Dish, c)).ToArray(),
                 CreatedDate = custom.CreatedDate,
                 Comment = custom.Comment,
-                IsExportRequested = custom.IsExportRequested
+                IsExportRequested = custom.IsExportRequested,
+                CurrentMemory = (GC.GetTotalMemory(false) / 1024 / 1024).ToString(),
+                TotalMemory = (Process.GetCurrentProcess().WorkingSet64 / 1024 / 1024).ToString()
             };
         }
     }

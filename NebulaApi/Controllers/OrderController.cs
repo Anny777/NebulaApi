@@ -2,7 +2,10 @@
 using NebulaApi.Models;
 using NebulaApi.ViewModels;
 using ProjectOrderFood.Enums;
+using Serilog;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Web.Http;
 using System.Web.Http.Cors;
@@ -117,6 +120,8 @@ namespace NebulaApi.Controllers
             using (var db = new ApplicationDbContext())
             {
                 var orders = db.Customs.Where(c => c.IsOpened).ToList().Select(c => Custom.ToViewModel(c, c.CookingDishes.ToArray())).ToList();
+                var memory = GC.GetTotalMemory(true) / 1024;
+                Log.Logger.Debug("Method {method}, current memory {memory} M", nameof(List), memory);
                 return Ok(orders);
             }
         }
